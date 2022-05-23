@@ -36,4 +36,39 @@ public class ProductController {
     public void setImageSaverService(ImageSaverService imageSaverService) {
         this.imageSaverService = imageSaverService;
     }
+
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable(name = "id") Long id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            product = new Product();
+            product.setId(0L);
+        }
+        model.addAttribute("product", product);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "/edit-product";
+    }
+
+    @PostMapping("/edit")
+    public String processProductAddForm(@Valid @ModelAttribute("product") Product product, BindingResult theBindingResult, Model model, @RequestParam("file") MultipartFile file) {
+        if (product.getId() == 0 && productService.isProductWithTitleExists(product.getTitle())) {
+            theBindingResult.addError(new ObjectError("product.title", "Товар с таким названием уже существует")); // todo не отображает сообщение
+        }
+
+        if (theBindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "edit-product";
+        }
+
+        if (!file.isEmpty()) {
+            String pathToSavedImage = imageSaverService.saveFile(file);
+            ProductImage productImage = new ProductImage();
+            productImage.setPath(pathToSavedImage);
+            productImage.setProduct(product);
+            product.addImage(productImage);
+        }
+
+        productService.saveProduct(product);
+        return "redirect:/shop";
+    }
 }
