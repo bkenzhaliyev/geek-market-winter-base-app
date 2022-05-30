@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/products")
@@ -21,6 +23,7 @@ public class ProductController {
     private ProductService productService;
     private CategoryService categoryService;
     private ImageSaverService imageSaverService;
+    private LocalDateTime createAt;
 
     @Autowired
     public void setProductService(ProductService productService) {
@@ -44,6 +47,14 @@ public class ProductController {
             product = new Product();
             product.setId(0L);
         }
+
+//        Не уверен что это лучшее решение...
+//       запоминаем данные по полю датаВремя создания
+        if (product.getId() != 0) {
+            createAt = product.getCreateAt();
+        }
+
+
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.getAllCategories());
         return "/edit-product";
@@ -55,6 +66,12 @@ public class ProductController {
             theBindingResult.addError(new ObjectError("product.title", "Товар с таким названием уже существует")); // todo не отображает сообщение
         }
 
+//        Не уверен что это лучшее решение...
+//       записываем данные по полям датаВремя создания, датаВремя изменения
+        if(product.getId() != 0){
+            product.setCreateAt(createAt);
+            product.setUpdateAt(LocalDateTime.now());
+        }
         if (theBindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "edit-product";
@@ -67,7 +84,7 @@ public class ProductController {
             productImage.setProduct(product);
             product.addImage(productImage);
         }
-
+//        System.out.println(product + " create_at= " + product.getCreateAt());
         productService.saveProduct(product);
         return "redirect:/shop";
     }

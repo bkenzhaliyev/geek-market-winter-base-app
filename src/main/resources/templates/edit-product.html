@@ -32,6 +32,8 @@
                 <article class="card-body">
                     <form th:action="@{/products/edit}" th:object="${product}" method="post" enctype="multipart/form-data">
                         <input th:field="*{id}" type="hidden" class="form-control">
+<!--                        <input th:field="*{create_at}" type="hidden" class="form-control">-->
+<!--                        <input th:field="*{update_at}" type="hidden" class="form-control">-->
 
                         <div class="form-row">
                             <div class="col form-group">
@@ -83,6 +85,9 @@
                         </div>
 
                         <div class="form-row">
+                            <td>
+                                <img th:if="${product.images.size() > 0}" width="40" height="40" th:src="@{'/images/' + ${product.images[0].path}}" />
+                            </td>
                             <div class="col form-group">
                                 <label>Картинка</label>
                                 <input type="file" name="file" class="form-control-file" accept="image/*"/>
