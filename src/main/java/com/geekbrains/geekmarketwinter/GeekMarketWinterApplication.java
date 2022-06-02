@@ -9,9 +9,9 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan
 @EnableAutoConfiguration
 public class GeekMarketWinterApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(GeekMarketWinterApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GeekMarketWinterApplication.class, args);
+    }
 
 //	private TestRepository repository;
 //
