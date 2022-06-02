@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@ComponentScan
-//@EnableAutoConfiguration
+@ComponentScan
+@EnableAutoConfiguration
 public class GeekMarketWinterApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(GeekMarketWinterApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GeekMarketWinterApplication.class, args);
+    }
 
 //	private TestRepository repository;
 //
